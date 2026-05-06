@@ -91,5 +91,8 @@ app.post('/v1/signup', async (req, res) => {
 
 /** Later: JWT validation middleware, game catalog, entitlements, etc. */
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`sjtweaks-main-api listening on ${PORT}`));
+const PORT = Number(process.env.PORT) || 3000;
+const HOST = process.env.LISTEN_HOST || '0.0.0.0';
+app.listen(PORT, HOST, () => {
+  console.log(`sjtweaks-main-api listening on http://${HOST}:${PORT}`);
+});

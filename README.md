@@ -17,3 +17,9 @@ Standalone repo: deploy this folder as **one** Railway service + **a second** Po
 4. On Railway for **this** service: add **PostgreSQL** (separate from Auth DB), run `sql/001-main.sql`, set `AUTH_SERVICE_URL` to your Auth service URL, and **`INTERNAL_AUTH_KEY`** matching the Auth service.
 
 Do not commit `.env`.
+
+## Deploy failed on Railway?
+
+1. Same as auth: bind **`0.0.0.0`** (included here), correct **Root Directory**, **`DATABASE_URL`** from Postgres, check **Build logs**.
+2. **`AUTH_SERVICE_URL`** must be the **public HTTPS URL** of your auth service (deploy auth first).
+3. **`INTERNAL_AUTH_KEY`** must match the auth service exactly.
