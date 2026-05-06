@@ -20,6 +20,17 @@ Do not commit `.env`.
 
 ## Deploy failed on Railway?
 
-1. Same as auth: bind **`0.0.0.0`** (included here), correct **Root Directory**, **`DATABASE_URL`** from Postgres, check **Build logs**.
-2. **`AUTH_SERVICE_URL`** must be the **public HTTPS URL** of your auth service (deploy auth first).
-3. **`INTERNAL_AUTH_KEY`** must match the auth service exactly.
+1. **“Internal network configuration” step fails** — Railway private network is IPv6-only. This repo binds **dual-stack `::`** (with IPv4 fallback) so both work.
+2. Correct **Root Directory**, **`DATABASE_URL`** from Postgres, **Build logs** for clear errors.
+3. **`AUTH_SERVICE_URL`** must be the **public HTTPS URL** of your auth service (deploy auth first).
+4. **`INTERNAL_AUTH_KEY`** must match the auth service exactly.
+
+### How to update via the GitHub UI
+
+In your `mainrailwayservice` repo, replace these files (Add file → Upload files, or pencil edit each):
+
+- `server.js`
+- `package.json`
+- `nixpacks.toml`
+
+Commit. Railway will auto-redeploy.

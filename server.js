@@ -92,7 +92,21 @@ app.post('/v1/signup', async (req, res) => {
 /** Later: JWT validation middleware, game catalog, entitlements, etc. */
 
 const PORT = Number(process.env.PORT) || 3000;
-const HOST = process.env.LISTEN_HOST || '0.0.0.0';
-app.listen(PORT, HOST, () => {
-  console.log(`sjtweaks-main-api listening on http://${HOST}:${PORT}`);
+// Dual-stack so Railway's IPv6-only private network can route to us as well.
+const PREFERRED_HOST = process.env.LISTEN_HOST || '::';
+
+const server = app.listen(PORT, PREFERRED_HOST, () => {
+  console.log(`sjtweaks-main-api listening on [${PREFERRED_HOST}]:${PORT}`);
+});
+
+server.on('error', (err) => {
+  if (err.code === 'EAFNOSUPPORT' || err.code === 'EADDRNOTAVAIL') {
+    console.warn(`IPv6 bind failed (${err.code}); falling back to 0.0.0.0`);
+    app.listen(PORT, '0.0.0.0', () => {
+      console.log(`sjtweaks-main-api listening on 0.0.0.0:${PORT}`);
+    });
+  } else {
+    console.error('Listen error:', err);
+    process.exit(1);
+  }
 });
